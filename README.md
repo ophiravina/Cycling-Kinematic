@@ -1,8 +1,9 @@
 
 # 🚴 Cycling Kinematic Analysis Tool
 
-![Python](https://img.shields.io/badge/python-3.10-blue)
+[![DOI](https://zenodo.org/badge/989866121.svg)](https://doi.org/10.5281/zenodo.15510681)
 ![License](https://img.shields.io/badge/license-CC%20BY--NC%204.0-lightgrey)
+![Python](https://img.shields.io/badge/python-3.10-blue)
 ![Status](https://img.shields.io/badge/status-research--prototype-yellow)
 
 Python tool for the analysis of lower limb 3D kinematics during cycling across multiple power levels.  
@@ -112,4 +113,4 @@ Ophir Ravina
 If you use this tool in your research, please cite:
 
 > Ravina, O. (2025). Cycling Kinematic Analysis Tool (Version 1.0.0) [Computer software].  
-> Zenodo. https://doi.org/10.xxxx/zenodo.xxxxxxx
+> Zenodo. https://doi.org/10.5281/zenodo.15510682
