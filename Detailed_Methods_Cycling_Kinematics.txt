@@ -1,0 +1,127 @@
+
+Cycling Kinematic Analysis – Detailed Methodology Explanation
+-------------------------------------------------------------
+
+This analysis was developed to evaluate joint symmetry in cycling based on 3D kinematic data from motion capture files. The process includes normalization, symmetry metrics, and statistical tests to compare joint behavior between the left and right limbs across multiple power levels.
+
+---
+
+1. INPUT AND DATA STRUCTURE
+
+Each input file (.txt) contains time-series data from a motion capture system during one cycling trial at a given power level (e.g., 250 watts). The user provides the power level when loading each file.
+
+The files include:
+- A header row with joint labels (e.g., "L_KNEE", "R_HIP")
+- A second row describing the axis: X (Flexion/Extension), Y (Abduction/Adduction), Z (Internal/External Rotation)
+- Rows of angle values over time (typically sampled at 50 Hz)
+
+---
+
+2. RANGE OF MOTION (ROM)
+
+For each joint and degree of freedom (DOF), the range of motion is computed separately for the left and right limbs:
+
+ROM = max(angle) − min(angle)
+
+This tells us how far the joint travels in each cycle. A higher ROM may reflect more flexibility or effort; differences between legs may indicate asymmetry.
+
+---
+
+3. NORMALIZATION FOR SYMMETRY ANALYSIS
+
+To compare the movements of the left and right legs fairly, we need to remove the influence of differences in movement range.
+
+We apply **min-max normalization** to scale each signal to the same scale:
+
+    normalized_angle(t) = (angle(t) - min) / (max - min) + 1
+
+Why "+1"? This ensures the signal starts from a baseline of 1 and ranges up to 2. It prevents division by zero and standardizes the range.
+
+Think of it like resizing two pictures so they fit exactly in the same frame before comparing them.
+
+---
+
+4. NORMALIZED SYMMETRY INDEX (NSI)
+
+The NSI compares the left and right limb positions **at every point in time** during the cycle:
+
+    NSI(t) = [(Right(t) − Left(t)) / (0.5 × (Right(t) + Left(t)))] × 100
+
+- If both legs move identically, NSI(t) = 0
+- Positive values indicate dominance of the right leg
+- Negative values indicate dominance of the left leg
+
+We then compute:
+- **Mean NSI**: Average bias toward one leg
+- **Mean absolute NSI**: Average magnitude of difference (ignoring direction)
+
+This gives insight into how balanced the legs are during movement.
+
+---
+
+5. CROSS-CORRELATION ANALYSIS
+
+Even if the legs have similar shapes of movement, one might be **slightly ahead or behind**.
+
+We measure this using cross-correlation, which tells us how similar two waveforms are when we slide one forward or backward in time.
+
+Steps:
+- Convert both signals to z-scores (mean 0, std dev 1)
+- Compute cross-correlation between right and left signals
+- Find:
+    - **r_max**: Maximum correlation value (similarity of shapes)
+    - **τ_lag**: Time lag (in degrees) where they match best
+
+    τ_lag = (lag_time / cycle_duration) × 360°
+
+This identifies **timing asymmetry** – whether one leg is delayed compared to the other.
+
+---
+
+6. STATISTICAL ANALYSIS
+
+Once all metrics are computed for all power levels:
+
+### Normality:
+We use the Shapiro-Wilk test to check if data for each metric is normally distributed. If:
+
+- p > 0.05: Data is likely normal → use ANOVA
+- p ≤ 0.05: Data is not normal → use Friedman test
+
+### Main Effect Tests:
+We compare metrics across power levels for each joint/DOF:
+
+- Repeated Measures ANOVA (if normal)
+- Friedman Test (non-parametric)
+
+### Post-Hoc Pairwise Testing:
+If the main effect is significant:
+- Paired t-tests are used to compare each pair of power levels
+- Bonferroni correction is applied to adjust for multiple comparisons
+
+---
+
+7. OUTPUT FILES
+
+For each subject:
+- CSV file with all metrics per joint/DOF/power level
+- Statistical results (normality, ANOVA/Friedman, post-hoc)
+- Optional comparison plots per metric
+
+---
+
+8. SOFTWARE ENVIRONMENT
+
+- Python 3.10+
+- Required packages:
+  - pandas
+  - numpy
+  - scipy
+  - matplotlib
+  - statsmodels
+
+All calculations are automated and reusable across subjects and trials.
+
+---
+
+This document is intended to ensure clarity for researchers from all backgrounds. It explains not just how metrics were computed, but also why each step matters.
