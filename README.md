@@ -76,13 +76,7 @@ For each subject/session:
 ---
 
 ## 📖 Methods
-
-This tool replicates and extends the methods from:
-
-**Pouliquen et al. (2018)**  
-"Spatiotemporal analysis of 3D kinematic asymmetry in professional cycling during an incremental test to exhaustion"  
-*Journal of Biomechanics, Volume 77*
-
+read "method.txt" for a more detalied explanation. 
 ### Implemented Calculations:
 
 1. **Range of Motion (ROM)** per joint and axis  
